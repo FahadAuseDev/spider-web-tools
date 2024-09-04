@@ -1,0 +1,24 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@nuxtjs/tailwindcss": "^6.12.1",
+    "file-saver": "^2.0.5",
+    "jszip": "^3.10.1",
+    "nuxt": "^3.13.0",
+    "vue": "latest",
+    "vue-sonner": "^1.1.5",
+    "vue3-dropzone": "^2.2.1"
+  },
+  "devDependencies": {
+    "@types/file-saver": "^2.0.7"
+  }
+}
