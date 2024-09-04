@@ -2,7 +2,6 @@
 import JSZip from 'jszip';
 import { Package } from "../utils/favicon/index";
 import type { IconPackage } from '~/utils/favicon/package';
-import Logo from '@/components/icons/logo.vue';
 import { useDropzone, type FileRejectReason } from "vue3-dropzone";
 import { saveAs } from 'file-saver';
 import { toast } from 'vue-sonner'
@@ -15,18 +14,24 @@ let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D | null;
 let presult: IconPackage;
 
-const id = 'favicon-conterter'
-
 const preview = ref<PreviewItem[]>([])
 const files = ref<File | null>(null)
 const code = [
   '<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">',
+  '<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">',
+  '<link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">',
   '<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">',
   '<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">',
   '<link rel="icon" href="/favicon.ico">',
-  '<link rel="manifest" href="/site.webmanifest">'
 ]
 
+function highlightCode(line: string) {
+  return line
+    .replace(/<([^>]+)>/g, '<span style="color: #8a6343;">&lt;$1&gt;</span>')
+    .replace(/href="([^"]+)"/g, 'href="<span style="color: #5890ad;">$1</span>"')
+    .replace(/sizes="([^"]+)"/g, 'sizes="<span style="color: #5890ad;">$1</span>"')
+    .replace(/type="([^"]+)"/g, 'type="<span style="color: #5890ad;">$1</span>"');
+}
 
 const handleFileChange = (acceptedFiles: any[], rejectReasons: FileRejectReason[]) => {
 
@@ -78,9 +83,11 @@ const download = () => {
   zip.file("favicon-32x32.png", presult.png32.split(",")[1], {
     base64: true
   });
+
   zip.file("favicon-16x16.png", presult.png16.split(",")[1], {
     base64: true
   });
+
   zip.file("favicon.ico", presult.ico.split(",")[1], {
     base64: true
   });
@@ -88,35 +95,15 @@ const download = () => {
   zip.file("android-chrome-192x192.png", presult.png192.split(",")[1], {
     base64: true
   });
+
   zip.file("android-chrome-512x512.png", presult.png512.split(",")[1], {
     base64: true
   });
 
-  zip.file(
-    "site.webmanifest",
-    JSON.stringify({
-      name: "tools.w3cub.com",
-      short_name: "",
-      icons: [
-        {
-          src: "/android-chrome-192x192.png",
-          sizes: "192x192",
-          type: "image/png"
-        },
-        {
-          src: "/android-chrome-512x512.png",
-          sizes: "512x512",
-          type: "image/png"
-        }
-      ],
-      theme_color: "#ffffff",
-      background_color: "#ffffff",
-      display: "standalone"
-    })
-  );
   zip.file("index.html", code.join('\n'));
+
   zip.generateAsync({ type: "blob" }).then(function (content) {
-    saveAs(content, `favicon_w3cub.zip`);
+    saveAs(content, `spiderweb.zip`);
     toast.info("Donwloading!", {
       description: "Please wait while you assets are being downloaded.",
       action: {
@@ -172,11 +159,12 @@ const copyCode = async () => {
 
 <template>
   <header class="tw-flex tw-justify-between tw-items-center tw-py-5 tw-px-14 tw-shadow-md tw-shadow-black/10">
-    <a href="">
-      <Logo />
-    </a>
-    <a href="/"
-      class="tw-h-[40px] tw-px-4 tw-text-center hover:tw-bg-gray-100 tw-transition-all tw-grid tw-items-center tw-rounded">WecubDocs</a>
+    <NuxtLink to="/">
+      <img src="/logo.svg" alt="Spider web" class="tw-w-[149px]">
+    </NuxtLink>
+    <NuxtLink to="/"
+      class="tw-h-[40px] tw-px-4 tw-text-center hover:tw-bg-gray-100 tw-transition-all tw-grid tw-items-center tw-rounded">
+      Home</NuxtLink>
   </header>
 
   <main class="tw-p-14 tw-max-w-screen-2xl tw-mx-auto">
@@ -227,12 +215,12 @@ const copyCode = async () => {
             <li>favicon-32x32.png</li>
             <li>favicon-16x16.png</li>
             <li>favicon.ico</li>
-            <li>site.webmanifest</li>
+            <!-- <li>site.webmanifest</li> -->
           </ul>
           <p>Next, copy the following link tags and paste them into thehead of your HTML.</p>
 
           <div class="tw-p-5 tw-border tw-shadow-sm tw-rounded tw-flex tw-flex-col tw-gap-2">
-            <code v-for="(line) in code">{{ line }}</code>
+            <div v-for="(line, index) in code" :key="index" v-html="highlightCode(line)"></div>
           </div>
 
           <button @click="copyCode"
@@ -243,9 +231,6 @@ const copyCode = async () => {
       <div class="tw-border tw-border-gray-400 tw-space-y-6 tw-rounded-md tw-p-5 tw-mt-16">
         <div class="tw-flex tw-justify-between tw-items-center tw-pb-4 tw-border-b">
           <h3 class="tw-text-2xl tw-font-semibold">What is favicon?</h3>
-          <span>
-            [<a href="" class="tw-text-blue-600 tw-cursor-pointer hover:tw-underline">edit</a>]
-          </span>
         </div>
         <p>
           A favicon (/'fæv.iˌkɒn/; short for favorite icon), also known as a shortcut icon, website icon, tab icon, URL
@@ -258,28 +243,16 @@ const copyCode = async () => {
         </p>
         <h3 class="tw-text-2xl tw-font-semibold tw-pb-4 tw-border-b">Do favicon affect user experience or SEO?</h3>
         <p>Yes</p>
-        <h3 class="tw-text-2xl tw-font-semibold tw-pb-4 tw-border-b">Related Links</h3>
-        <ul class="tw-list-disc tw-list-inside">
-          <li><a href="" class="tw-text-blue-600 tw-cursor-pointer hover:tw-underline tw-font-medium">Meta Tag
-              generator</a></li>
-        </ul>
       </div>
     </section>
   </main>
 
   <footer class="tw-bg-pink-50/50 tw-p-14 tw-flex tw-flex-col tw-text-center tw-gap-6">
-    <a href="" class="tw-border-b tw-border-gray-200 tw-w-full tw-flex tw-justify-center tw-pb-6">
-      <Logo />
-    </a>
-    <ul class="tw-flex tw-fl tw-justify-center tw-gap-4 tw-items-center">
-      <li><a href="">Privacy Policy</a></li>
-      <li><a href="">Issues</a></li>
-      <li><a href="">Improve Description</a></li>
-      <li><a href="">Donate</a></li>
-      <li><a href="">About</a></li>
-    </ul>
+    <Nuxt to="/" class="tw-border-b tw-border-gray-200 tw-w-full tw-flex tw-justify-center tw-pb-6">
+      <img src="/logo.svg" alt="Spider web" class="tw-w-[192px]">
+    </Nuxt>
     <p>
-      Copyright © 2024 W3cub All Rights Reserved.
+      Copyright © 2024 Spidernow All Rights Reserved.
     </p>
   </footer>
 </template>

@@ -5,7 +5,7 @@ export type IconPackage = {
   ico: string;
   png16: string;
   png32: string;
-  png150: string;
+  // png150: string;
   png180: string;
   png192: string;
   png512: string;
@@ -19,7 +19,7 @@ const Package = {
       ico: ico.generate(),
       png16: png.generate(16),
       png32: png.generate(32),
-      png150: png.generate(150),
+      // png150: png.generate(150),
       png180: png.generate(180),
       png192: png.generate(192),
       png512: png.generate(512),
