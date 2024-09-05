@@ -4,6 +4,6 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ["@nuxtjs/tailwindcss"],
   nitro: {
-    preset: "node-cluster",
+    preset: "vercel",
   },
 });
