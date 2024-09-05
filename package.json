@@ -19,6 +19,8 @@
     "vue3-dropzone": "^2.2.1"
   },
   "devDependencies": {
-    "@types/file-saver": "^2.0.7"
+    "@types/file-saver": "^2.0.7",
+    "class-variance-authority": "^0.7.0",
+    "tailwind-merge": "^2.5.2"
   }
 }

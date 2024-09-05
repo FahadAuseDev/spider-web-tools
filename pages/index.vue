@@ -189,8 +189,7 @@ const copyCode = async () => {
       </div>
 
       <div>
-        <button @click="convertZip"
-          class="tw-h-[100px] tw-border tw-border-gray-400 tw-rounded-md tw-text-center tw-bg-transparent tw-w-full">Download</button>
+        <UiButton size="lg" :class="'tw-mx-auto'">Download</UiButton>
         <div class="tw-border tw-border-gray-400 tw-space-y-6 tw-rounded-md tw-p-5 tw-mt-16"
           v-if="preview && preview.length">
           <h3 class="tw-text-[24px] tw-font-semibold">Preview</h3>
@@ -223,8 +222,12 @@ const copyCode = async () => {
             <div v-for="(line, index) in code" :key="index" v-html="highlightCode(line)"></div>
           </div>
 
-          <button @click="copyCode"
-            class="tw-border tw-rounded tw-px-5 tw-py-1 tw-font-semibold hover:tw-bg-gray-100">Copy</button>
+          <div class="tw-flex tw-items-center tw-gap-4">
+            <UiButton @click="copyCode"
+              class="tw-border tw-rounded tw-px-5 tw-py-1 tw-font-semibold hover:tw-bg-gray-100">
+              Copy</UiButton>
+            <UiButton @click="">Download</UiButton>
+          </div>
         </div>
       </div>
 
